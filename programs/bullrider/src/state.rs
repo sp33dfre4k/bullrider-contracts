@@ -1,7 +1,8 @@
 use anchor_lang::prelude::*;
 use anchor_spl::{
     associated_token::AssociatedToken,
-    token::{Mint, TokenAccount, Token},
+    token::{Mint, TokenAccount},
+    token_2022::Token2022,
 };
 
 #[derive(Accounts)]
@@ -32,7 +33,7 @@ pub struct Initialize<'info> {
     #[account(mut)]
     pub payer: Signer<'info>,
     
-    pub token_program: Program<'info, Token>,
+    pub token_program: Program<'info, Token2022>,
     pub system_program: Program<'info, System>,
     pub rent: Sysvar<'info, Rent>,
 }
@@ -54,6 +55,7 @@ pub struct MintToken<'info> {
         payer = payer,
         associated_token::mint = mint,
         associated_token::authority = recipient,
+        associated_token::token_program = token_program,
     )]
     pub recipient_token_account: Account<'info, TokenAccount>,
     
@@ -61,7 +63,7 @@ pub struct MintToken<'info> {
     #[account(mut)]
     pub payer: Signer<'info>,
     
-    pub token_program: Program<'info, Token>,
+    pub token_program: Program<'info, Token2022>,
     pub associated_token_program: Program<'info, AssociatedToken>,
     pub system_program: Program<'info, System>,
     pub rent: Sysvar<'info, Rent>,

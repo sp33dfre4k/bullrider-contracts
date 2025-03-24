@@ -4,7 +4,7 @@ mod constants;
 mod instructions;
 mod state;
 
-declare_id!("2i8dyR8UNhP5GtiRrrUX8eZiMWNRDdzVg5SxZ58Bj6Wp");
+declare_id!("8oCRvRy6ScwN1JX9QvJsmS9UrcdqiGpcBTZLBDhX5vHb");
 
 #[program]
 pub mod bullrider {
