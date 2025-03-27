@@ -1,5 +1,7 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token_interface::{burn, TokenAccount, TokenInterface, Mint, WithdrawWithheldTokensFromMint};
+use anchor_spl::token_interface::{
+    Burn, TokenAccount, TokenInterface, Mint, WithdrawWithheldTokensFromMint,
+};
 
 #[derive(Accounts)]
 pub struct WithdrawAndBurn<'info> {
@@ -20,14 +22,19 @@ pub struct WithdrawAndBurn<'info> {
 }
 
 pub fn handler(ctx: Context<WithdrawAndBurn>) -> Result<()> {
-    let signer_seeds = &[
+    let mint_key: Pubkey = ctx.accounts.mint.key();
+    let bump: u8 = ctx.bumps.withdraw_authority;
+
+    let signer_seeds: &[&[u8]; 3] = &[
         b"withheld",
-        ctx.accounts.mint.key().as_ref(),
-        &[ctx.bumps.withdraw_authority],
+        mint_key.as_ref(),
+        &[bump],
     ];
 
+    let signer_seeds: &[&[&[u8]]; 1] = &[&signer_seeds[..]];
+
     // Withdraw withheld tokens from mint to fee pool
-    let cpi_ctx = CpiContext::new_with_signer(
+    let cpi_ctx: CpiContext<'_, '_, '_, '_, WithdrawWithheldTokensFromMint<'_>> = CpiContext::new_with_signer(
         ctx.accounts.token_program.to_account_info(),
         WithdrawWithheldTokensFromMint {
             mint: ctx.accounts.mint.to_account_info(),
@@ -35,22 +42,22 @@ pub fn handler(ctx: Context<WithdrawAndBurn>) -> Result<()> {
             authority: ctx.accounts.withdraw_authority.to_account_info(),
             token_program_id: ctx.accounts.token_program.to_account_info(),
         },
-        &[signer_seeds],
+        signer_seeds,
     );
     anchor_spl::token_interface::withdraw_withheld_tokens_from_mint(cpi_ctx)?;
 
     // Burn the withdrawn tokens
-    let amount = ctx.accounts.fee_pool.amount;
-    let burn_ctx = CpiContext::new_with_signer(
+    let amount: u64 = ctx.accounts.fee_pool.amount;
+    let burn_ctx: CpiContext<'_, '_, '_, '_, Burn<'_>> = CpiContext::new_with_signer(
         ctx.accounts.token_program.to_account_info(),
-        burn {
+        Burn {
             mint: ctx.accounts.mint.to_account_info(),
             from: ctx.accounts.fee_pool.to_account_info(),
             authority: ctx.accounts.withdraw_authority.to_account_info(),
         },
-        &[signer_seeds],
+        signer_seeds,
     );
-    burn(burn_ctx, amount)?;
+    anchor_spl::token_interface::burn(burn_ctx, amount)?;
 
     Ok(())
 }
