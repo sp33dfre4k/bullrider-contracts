@@ -2,7 +2,7 @@
     "name": "Bull Rider Test",
     "symbol": "BULLTEST",
     "description": "",
-    "image": "https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/DeveloperPortal/image.png",
+    "image": "https://raw.githubusercontent.com/sp33dfre4k/bullrider-contracts/refs/heads/trunk/metadata/bullrider.jpg",
     "extensions": {
       "website": "https://bullrider.xyz",
       "twitter": "https://x.com/bullrider_xyz",
