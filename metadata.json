@@ -1,0 +1,11 @@
+{
+    "name": "Bull Rider Test",
+    "symbol": "BULLTEST",
+    "description": "",
+    "image": "https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/DeveloperPortal/image.png",
+    "extensions": {
+      "website": "https://bullrider.xyz",
+      "twitter": "https://x.com/bullrider_xyz",
+      "telegram": "https://t.me/pumpfunsupport"
+    }
+  }
