@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 
 pub mod instructions;
-use instructions::{WithdrawAndBurn, ClaimInterest};
+use instructions::ClaimInterest;
 
 declare_id!("8oCRvRy6ScwN1JX9QvJsmS9UrcdqiGpcBTZLBDhX5vHb");
 
@@ -13,7 +13,7 @@ pub mod bullrider {
         instructions::withdraw_and_burn_ix::handler(ctx)
     }
 
-    pub fn claim_interest(ctx: Context<ClaimInterest>, interest_amount: u64) -> Result<()> {
-        instructions::claim_interest_ix::handler(ctx, interest_amount)
+    pub fn claim_interest(ctx: Context<ClaimInterest>) -> Result<()> {
+        instructions::claim_interest_ix::handler(ctx)
     }
 }
