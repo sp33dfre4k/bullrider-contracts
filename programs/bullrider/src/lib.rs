@@ -11,7 +11,11 @@ use instructions::*;
 pub mod bullrider {
     use super::*;
 
+    pub fn collect_fees(ctx: Context<CollectFees>) -> Result<()> {
+        instructions::collect_fees(ctx)
+    }
+
     pub fn claim_interest(ctx: Context<ClaimInterest>) -> Result<()> {
-        claim_interest::handler(ctx)
+        instructions::claim_interest(ctx)
     }
 }

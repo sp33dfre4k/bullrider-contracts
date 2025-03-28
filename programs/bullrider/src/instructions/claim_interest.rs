@@ -28,7 +28,7 @@ pub struct ClaimInterest<'info> {
 
 /// Helper to compute the effective (UI) balance for a token account, including accrued interest
 fn calculate_effective_balance(ctx: &Context<ClaimInterest>) -> Result<u64> {
-    let amount_to_ui_amount_ctx: CpiContext<'_, '_, '_, '_, AmountToUiAmount<'_>> = CpiContext::new(
+    let amount_to_ui_amount_ctx= CpiContext::new(
         ctx.accounts.token_program.to_account_info(),
         AmountToUiAmount {
             account: ctx.accounts.user_token_account.to_account_info(),
@@ -52,7 +52,7 @@ fn calculate_effective_balance(ctx: &Context<ClaimInterest>) -> Result<u64> {
     Ok(raw_amount)
 }
 
-pub fn handler(ctx: Context<ClaimInterest>) -> Result<()> {
+pub fn claim_interest(ctx: Context<ClaimInterest>) -> Result<()> {
 
     let effective_balance: u64 = calculate_effective_balance(&ctx)?;
     msg!("Effective balance (including accrued interest): {}", effective_balance);
@@ -83,8 +83,8 @@ pub fn handler(ctx: Context<ClaimInterest>) -> Result<()> {
 
     // Transfer from fee pool if available.
     if from_pool > 0 {
-        let transfer_ctx: CpiContext<'_, '_, '_, '_, TransferChecked<'_>> = CpiContext::new_with_signer(
-            ctx.accounts.token_program.to_account_info(),
+        let transfer_ctx= CpiContext::new_with_signer(
+        ctx.accounts.token_program.to_account_info(),
             TransferChecked {
                 from: ctx.accounts.fee_pool.to_account_info(),
                 to: ctx.accounts.user_token_account.to_account_info(),
@@ -99,7 +99,7 @@ pub fn handler(ctx: Context<ClaimInterest>) -> Result<()> {
 
     // Mint new tokens for any remaining interest.
     if to_mint > 0 {
-        let mint_ctx: CpiContext<'_, '_, '_, '_, MintToChecked<'_>> = CpiContext::new_with_signer(
+        let mint_ctx= CpiContext::new_with_signer(
             ctx.accounts.token_program.to_account_info(),
             MintToChecked {
                 mint: ctx.accounts.mint.to_account_info(),
